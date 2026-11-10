@@ -1,0 +1,150 @@
+<div class="page-container">
+  <div class="pnr-page-wrapper">
+    <!-- PNR Search Card -->
+    <div class="card pnr-input-card">
+      <div class="pnr-header">
+        <span class="pnr-icon">🔍</span>
+        <h1 class="card-title text-center">{{ 'PNR_SEARCH_TITLE' | translate }}</h1>
+        <p class="text-center pnr-sub">{{ 'PNR_SEARCH_SUBTITLE' | translate }}</p>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          ⚠️ {{ errorMessage }}
+        </div>
+      }
+
+      <form [formGroup]="pnrForm" (ngSubmit)="onSearchPnr()">
+        <div class="pnr-form-row">
+          <div class="form-group pnr-input-group">
+            <label for="pnr-input">{{ 'LABEL_ENTER_PNR' | translate }} *</label>
+            <input
+              id="pnr-input"
+              type="text"
+              formControlName="pnr"
+              class="form-control pnr-text-field"
+              [placeholder]="'PLACEHOLDER_PNR' | translate"
+              maxlength="10"
+              [class.is-invalid]="pnrForm.get('pnr')?.touched && pnrForm.get('pnr')?.invalid">
+            @if (pnrForm.get('pnr')?.touched && pnrForm.get('pnr')?.invalid) {
+              <span class="invalid-feedback">{{ 'ERR_INVALID_PNR' | translate }}</span>
+            }
+          </div>
+
+          <div class="pnr-btn-group">
+            <button type="submit" class="btn btn-primary btn-pnr-submit">
+              🔍 {{ 'BTN_CHECK_STATUS' | translate }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Sample PNRs for easy testing -->
+        <div class="sample-pnr-box">
+          <span class="sample-label">Try Demo PNRs:</span>
+          <div class="sample-tags">
+            @for (sample of samplePnrs; track sample) {
+              <button
+                type="button"
+                class="sample-btn"
+                (click)="fillSamplePnr(sample)">
+                {{ sample }}
+              </button>
+            }
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- PNR Result Section -->
+    @if (searched && bookingResult) {
+      <div class="card pnr-result-card">
+        <div class="result-top-banner">
+          <div class="result-pnr-info">
+            <span class="result-pnr-label">PNR NUMBER</span>
+            <span class="result-pnr-code">{{ bookingResult.pnr }}</span>
+          </div>
+          <div class="result-status-badge">
+            <span
+              class="badge status-pill"
+              [class.badge-success]="bookingResult.status === 'CONFIRMED'"
+              [class.badge-danger]="bookingResult.status === 'CANCELLED'">
+              {{ bookingResult.status }}
+            </span>
+          </div>
+        </div>
+
+        <div class="result-train-strip">
+          <div class="strip-item">
+            <span class="strip-label">{{ 'LABEL_TRAIN_NO' | translate }} & Name</span>
+            <span class="strip-val">{{ bookingResult.trainName }} ({{ bookingResult.trainNumber }})</span>
+          </div>
+
+          <div class="strip-item">
+            <span class="strip-label">{{ 'ROUTE_LABEL' | translate }}</span>
+            <span class="strip-val">{{ bookingResult.fromStation }} ➔ {{ bookingResult.toStation }}</span>
+          </div>
+
+          <div class="strip-item">
+            <span class="strip-label">{{ 'JOURNEY_DATE_LABEL' | translate }}</span>
+            <span class="strip-val">{{ bookingResult.journeyDate | localizedDate }}</span>
+          </div>
+
+          <div class="strip-item">
+            <span class="strip-label">Class</span>
+            <span class="strip-val class-chip">{{ bookingResult.travelClass }}</span>
+          </div>
+        </div>
+
+        <!-- Passenger Status Table -->
+        <div class="passenger-status-table-wrap">
+          <h3 class="table-heading">Passenger Current Status</h3>
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Passenger #</th>
+                  <th>{{ 'LABEL_PASSENGER_NAME' | translate }}</th>
+                  <th>Age / Gender</th>
+                  <th>Booking Status</th>
+                  <th>Current Status & Seat</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of bookingResult.passengers; track $index) {
+                  <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td><strong>{{ p.name }}</strong></td>
+                    <td>{{ p.age }} yrs, {{ p.gender }}</td>
+                    <td>
+                      <span class="badge" [class.badge-success]="bookingResult.status === 'CONFIRMED'" [class.badge-danger]="bookingResult.status === 'CANCELLED'">
+                        {{ bookingResult.status === 'CONFIRMED' ? 'CNF' : 'CAN' }}
+                      </span>
+                    </td>
+                    <td>
+                      @if (bookingResult.status === 'CONFIRMED') {
+                        <span class="confirmed-seat-box">CNF / {{ p.seatNumber }}</span>
+                      } @else {
+                        <span class="cancelled-seat-box">CANCELLED</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pnr-footer-info">
+          <span>Booked on: {{ bookingResult.bookingDate | localizedDate }}</span>
+          <span>Total Fare Paid: <strong>{{ bookingResult.totalFare | localizedCurrency }}</strong></span>
+        </div>
+
+        <div class="pnr-print-row">
+          <button type="button" class="btn btn-secondary" (click)="printStatus()">
+            🖨️ Print PNR Status
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

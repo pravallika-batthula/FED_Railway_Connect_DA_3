@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" target-language="hi" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="APP_NAME" datatype="html">
+        <source>RailConnect</source>
+        <target>रेल-कनेक्ट</target>
+      </trans-unit>
+      <trans-unit id="NAV_HOME" datatype="html">
+        <source>Home</source>
+        <target>होम</target>
+      </trans-unit>
+      <trans-unit id="NAV_SEARCH" datatype="html">
+        <source>Train Search</source>
+        <target>ट्रेन खोज</target>
+      </trans-unit>
+      <trans-unit id="NAV_AVAILABILITY" datatype="html">
+        <source>Train Availability</source>
+        <target>ट्रेन उपलब्धता</target>
+      </trans-unit>
+      <trans-unit id="NAV_BOOKINGS" datatype="html">
+        <source>My Bookings</source>
+        <target>मेरी बुकिंग</target>
+      </trans-unit>
+      <trans-unit id="NAV_PNR" datatype="html">
+        <source>PNR Status</source>
+        <target>पीएनआर स्थिति</target>
+      </trans-unit>
+      <trans-unit id="NAV_LOGIN" datatype="html">
+        <source>Login</source>
+        <target>लॉगिन</target>
+      </trans-unit>
+      <trans-unit id="NAV_REGISTER" datatype="html">
+        <source>Register</source>
+        <target>पंजीकरण</target>
+      </trans-unit>
+      <trans-unit id="NAV_LOGOUT" datatype="html">
+        <source>Logout</source>
+        <target>लॉगआउट</target>
+      </trans-unit>
+      <trans-unit id="HERO_TITLE" datatype="html">
+        <source>Welcome to RailConnect</source>
+        <target>रेल-कनेक्ट में आपका स्वागत है</target>
+      </trans-unit>
+      <trans-unit id="HERO_SUBTITLE" datatype="html">
+        <source>Safe, Reliable &amp; Fast Railway Reservations Across India</source>
+        <target>पूरे भारत में सुरक्षित, विश्वसनीय और त्वरित रेलवे आरक्षण</target>
+      </trans-unit>
+      <trans-unit id="LABEL_FROM_STATION" datatype="html">
+        <source>From Station</source>
+        <target>प्रस्थान स्टेशन</target>
+      </trans-unit>
+      <trans-unit id="LABEL_TO_STATION" datatype="html">
+        <source>To Station</source>
+        <target>गंतव्य स्टेशन</target>
+      </trans-unit>
+      <trans-unit id="LABEL_JOURNEY_DATE" datatype="html">
+        <source>Journey Date</source>
+        <target>यात्रा की तारीख</target>
+      </trans-unit>
+      <trans-unit id="BTN_SEARCH_TRAINS" datatype="html">
+        <source>Search Trains</source>
+        <target>ट्रेनें खोजें</target>
+      </trans-unit>
+      <trans-unit id="BTN_BOOK_NOW" datatype="html">
+        <source>Book Now</source>
+        <target>अभी बुक करें</target>
+      </trans-unit>
+      <trans-unit id="PNR_SEARCH_TITLE" datatype="html">
+        <source>PNR Status Enquiry</source>
+        <target>पीएनआर स्थिति पूछताछ</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

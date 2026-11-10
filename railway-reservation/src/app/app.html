@@ -1,0 +1,104 @@
+<header class="header">
+  <div class="header-container">
+    <a routerLink="/home" class="logo" (click)="closeMobileMenu()">
+      <span class="logo-icon">🚆</span>
+      <span class="logo-text">RailConnect</span>
+    </a>
+
+    <button
+      class="mobile-toggle"
+      type="button"
+      (click)="toggleMobileMenu()"
+      [attr.aria-expanded]="isMobileMenuOpen"
+      aria-label="Toggle navigation">
+      ☰
+    </button>
+
+    <nav class="nav-menu" [class.open]="isMobileMenuOpen">
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+            {{ 'NAV_HOME' | translate }}
+          </a>
+        </li>
+        <li>
+          <a routerLink="/search" routerLinkActive="active" (click)="closeMobileMenu()">
+            {{ 'NAV_SEARCH' | translate }}
+          </a>
+        </li>
+        <li>
+          <a routerLink="/availability" routerLinkActive="active" (click)="closeMobileMenu()">
+            {{ 'NAV_AVAILABILITY' | translate }}
+          </a>
+        </li>
+        <li>
+          <a routerLink="/pnr-status" routerLinkActive="active" (click)="closeMobileMenu()">
+            {{ 'NAV_PNR' | translate }}
+          </a>
+        </li>
+        @if (authService.isLoggedIn()) {
+          <li>
+            <a routerLink="/bookings" routerLinkActive="active" (click)="closeMobileMenu()">
+              {{ 'NAV_BOOKINGS' | translate }}
+            </a>
+          </li>
+        }
+      </ul>
+
+      <div class="nav-right">
+        <!-- Language Selector -->
+        <div class="lang-selector-wrap">
+          <select
+            class="lang-select"
+            [value]="currentLang"
+            (change)="onLanguageChange($event)"
+            aria-label="Language selection">
+            <option value="en">English</option>
+            <option value="te">తెలుగు</option>
+            <option value="hi">हिन्दी</option>
+          </select>
+        </div>
+
+        <!-- Auth Links -->
+        <div class="auth-buttons">
+          @if (authService.isLoggedIn()) {
+            <span class="user-greeting">
+              👤 {{ authService.getCurrentUser()?.name }}
+            </span>
+            <button class="btn btn-outline-light btn-sm" (click)="logout()">
+              {{ 'NAV_LOGOUT' | translate }}
+            </button>
+          } @else {
+            <a routerLink="/login" class="nav-auth-link" (click)="closeMobileMenu()">
+              {{ 'NAV_LOGIN' | translate }}
+            </a>
+            <a routerLink="/register" class="btn btn-register btn-sm" (click)="closeMobileMenu()">
+              {{ 'NAV_REGISTER' | translate }}
+            </a>
+          }
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main class="main-content">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-brand">
+      <div class="footer-logo">🚆 RailConnect</div>
+      <p class="footer-motto">Official Railway Reservation System Clone (DA-3)</p>
+    </div>
+    <div class="footer-links">
+      <a routerLink="/home">{{ 'NAV_HOME' | translate }}</a>
+      <a routerLink="/search">{{ 'NAV_SEARCH' | translate }}</a>
+      <a routerLink="/availability">{{ 'NAV_AVAILABILITY' | translate }}</a>
+      <a routerLink="/pnr-status">{{ 'NAV_PNR' | translate }}</a>
+      <a routerLink="/bookings">{{ 'NAV_BOOKINGS' | translate }}</a>
+    </div>
+    <p class="footer-copy">{{ 'FOOTER_TEXT' | translate }}</p>
+  </div>
+</footer>

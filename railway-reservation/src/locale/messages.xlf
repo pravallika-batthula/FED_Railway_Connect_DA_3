@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="APP_NAME" datatype="html">
+        <source>RailConnect</source>
+      </trans-unit>
+      <trans-unit id="NAV_HOME" datatype="html">
+        <source>Home</source>
+      </trans-unit>
+      <trans-unit id="NAV_SEARCH" datatype="html">
+        <source>Train Search</source>
+      </trans-unit>
+      <trans-unit id="NAV_AVAILABILITY" datatype="html">
+        <source>Train Availability</source>
+      </trans-unit>
+      <trans-unit id="NAV_BOOKINGS" datatype="html">
+        <source>My Bookings</source>
+      </trans-unit>
+      <trans-unit id="NAV_PNR" datatype="html">
+        <source>PNR Status</source>
+      </trans-unit>
+      <trans-unit id="NAV_LOGIN" datatype="html">
+        <source>Login</source>
+      </trans-unit>
+      <trans-unit id="NAV_REGISTER" datatype="html">
+        <source>Register</source>
+      </trans-unit>
+      <trans-unit id="NAV_LOGOUT" datatype="html">
+        <source>Logout</source>
+      </trans-unit>
+      <trans-unit id="HERO_TITLE" datatype="html">
+        <source>Welcome to RailConnect</source>
+      </trans-unit>
+      <trans-unit id="HERO_SUBTITLE" datatype="html">
+        <source>Safe, Reliable &amp; Fast Railway Reservations Across India</source>
+      </trans-unit>
+      <trans-unit id="LABEL_FROM_STATION" datatype="html">
+        <source>From Station</source>
+      </trans-unit>
+      <trans-unit id="LABEL_TO_STATION" datatype="html">
+        <source>To Station</source>
+      </trans-unit>
+      <trans-unit id="LABEL_JOURNEY_DATE" datatype="html">
+        <source>Journey Date</source>
+      </trans-unit>
+      <trans-unit id="BTN_SEARCH_TRAINS" datatype="html">
+        <source>Search Trains</source>
+      </trans-unit>
+      <trans-unit id="BTN_BOOK_NOW" datatype="html">
+        <source>Book Now</source>
+      </trans-unit>
+      <trans-unit id="PNR_SEARCH_TITLE" datatype="html">
+        <source>PNR Status Enquiry</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,0 +1,194 @@
+<div class="hero-section">
+  <div class="hero-content">
+    <h1 class="hero-title">{{ 'HERO_TITLE' | translate }}</h1>
+    <p class="hero-subtitle">{{ 'HERO_SUBTITLE' | translate }}</p>
+
+    <!-- Train Search Form Card -->
+    <div class="search-card">
+      <h2 class="search-card-title">
+        🚆 {{ 'SEARCH_CARD_TITLE' | translate }}
+      </h2>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          ⚠️ {{ errorMessage }}
+        </div>
+      }
+
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="form-row">
+          <!-- From Station -->
+          <div class="form-group flex-1">
+            <label for="home-from">{{ 'LABEL_FROM_STATION' | translate }} *</label>
+            <select id="home-from" formControlName="from" class="form-control">
+              <option value="" disabled>{{ 'PLACEHOLDER_FROM_STATION' | translate }}</option>
+              @for (st of stations; track st.code) {
+                <option [value]="st.name + ' (' + st.code + ')'">
+                  {{ st.name }} ({{ st.code }}) - {{ st.city }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <!-- To Station -->
+          <div class="form-group flex-1">
+            <label for="home-to">{{ 'LABEL_TO_STATION' | translate }} *</label>
+            <select id="home-to" formControlName="to" class="form-control">
+              <option value="" disabled>{{ 'PLACEHOLDER_TO_STATION' | translate }}</option>
+              @for (st of stations; track st.code) {
+                <option [value]="st.name + ' (' + st.code + ')'">
+                  {{ st.name }} ({{ st.code }}) - {{ st.city }}
+                </option>
+              }
+            </select>
+          </div>
+
+          <!-- Journey Date -->
+          <div class="form-group flex-date">
+            <label for="home-date">{{ 'LABEL_JOURNEY_DATE' | translate }} *</label>
+            <input
+              id="home-date"
+              type="date"
+              formControlName="date"
+              class="form-control"
+              [min]="todayDateStr"
+              required>
+          </div>
+
+          <!-- Search Button -->
+          <div class="form-group flex-btn">
+            <label class="btn-spacer">&nbsp;</label>
+            <button type="submit" class="btn btn-primary btn-search-full">
+              🔍 {{ 'BTN_SEARCH_TRAINS' | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="page-container">
+  <!-- Search Results Section -->
+  @if (searched) {
+    <div class="results-section">
+      <div class="results-header">
+        <h2>{{ 'RESULTS_TITLE' | translate }}</h2>
+        <div class="results-meta">
+          <span><strong>{{ 'ROUTE_LABEL' | translate }}:</strong> {{ searchForm.value.from }} ➔ {{ searchForm.value.to }}</span>
+          <span><strong>{{ 'JOURNEY_DATE_LABEL' | translate }}:</strong> {{ searchForm.value.date | localizedDate }}</span>
+        </div>
+      </div>
+
+      @if (results.length === 0) {
+        <div class="alert alert-info">
+          {{ 'NO_TRAINS_FOUND' | translate }}
+        </div>
+      } @else {
+        <div class="train-list">
+          @for (train of results; track train.id) {
+            <div class="train-card card">
+              <div class="train-top">
+                <div class="train-identity">
+                  <h3 class="train-name">{{ train.name }}</h3>
+                  <span class="train-number">#{{ train.number }}</span>
+                </div>
+                <div class="train-timing">
+                  <div class="time-block">
+                    <span class="time-label">{{ 'LABEL_DEPARTURE' | translate }}</span>
+                    <span class="time-val">{{ train.departureTime }}</span>
+                  </div>
+                  <div class="duration-badge">
+                    ⏱️ {{ train.duration }}
+                  </div>
+                  <div class="time-block">
+                    <span class="time-label">{{ 'LABEL_ARRIVAL' | translate }}</span>
+                    <span class="time-val">{{ train.arrivalTime }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Travel Classes Selection -->
+              <div class="classes-container">
+                <!-- Sleeper (SL) -->
+                <div
+                  class="class-box"
+                  [class.selected]="selectedClassMap[train.id] === 'SL'"
+                  (click)="selectClass(train.id, 'SL')">
+                  <div class="class-header">
+                    <span class="class-name">SL</span>
+                    <span class="class-fare">{{ train.classes.SL.fare | localizedCurrency }}</span>
+                  </div>
+                  <div class="class-status avail-green">
+                    {{ train.classes.SL.status }}
+                  </div>
+                </div>
+
+                <!-- 3A -->
+                <div
+                  class="class-box"
+                  [class.selected]="selectedClassMap[train.id] === '3A'"
+                  (click)="selectClass(train.id, '3A')">
+                  <div class="class-header">
+                    <span class="class-name">3A</span>
+                    <span class="class-fare">{{ train.classes['3A'].fare | localizedCurrency }}</span>
+                  </div>
+                  <div class="class-status avail-green">
+                    {{ train.classes['3A'].status }}
+                  </div>
+                </div>
+
+                <!-- 2A -->
+                <div
+                  class="class-box"
+                  [class.selected]="selectedClassMap[train.id] === '2A'"
+                  (click)="selectClass(train.id, '2A')">
+                  <div class="class-header">
+                    <span class="class-name">2A</span>
+                    <span class="class-fare">{{ train.classes['2A'].fare | localizedCurrency }}</span>
+                  </div>
+                  <div class="class-status avail-green">
+                    {{ train.classes['2A'].status }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="train-action-row">
+                <div class="selected-summary">
+                  <span>Selected: <strong>{{ selectedClassMap[train.id] }}</strong> - {{ (selectedClassMap[train.id] === 'SL' ? train.classes.SL.fare : (selectedClassMap[train.id] === '3A' ? train.classes['3A'].fare : train.classes['2A'].fare)) | localizedCurrency }}</span>
+                </div>
+                <button type="button" class="btn btn-primary" (click)="bookTrain(train)">
+                  🎟️ {{ 'BTN_BOOK_NOW' | translate }}
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Feature Highlights -->
+  <div class="features-grid">
+    <div class="feature-card card">
+      <div class="feature-icon">⚡</div>
+      <h3>{{ 'FEATURE_FAST_BOOKING' | translate }}</h3>
+      <p>{{ 'FEATURE_FAST_DESC' | translate }}</p>
+      <a routerLink="/search" class="feature-link">{{ 'NAV_SEARCH' | translate }} ➔</a>
+    </div>
+
+    <div class="feature-card card">
+      <div class="feature-icon">🔍</div>
+      <h3>{{ 'FEATURE_PNR' | translate }}</h3>
+      <p>{{ 'FEATURE_PNR_DESC' | translate }}</p>
+      <a routerLink="/pnr-status" class="feature-link">{{ 'NAV_PNR' | translate }} ➔</a>
+    </div>
+
+    <div class="feature-card card">
+      <div class="feature-icon">🛡️</div>
+      <h3>{{ 'FEATURE_CANCEL' | translate }}</h3>
+      <p>{{ 'FEATURE_CANCEL_DESC' | translate }}</p>
+      <a routerLink="/bookings" class="feature-link">{{ 'NAV_BOOKINGS' | translate }} ➔</a>
+    </div>
+  </div>
+</div>

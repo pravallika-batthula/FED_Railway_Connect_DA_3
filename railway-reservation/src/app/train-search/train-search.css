@@ -1,0 +1,135 @@
+.search-page-wrapper {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.search-card-box {
+  padding: 32px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-top: -6px;
+  margin-bottom: 24px;
+}
+
+.route-selection-grid {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.route-selection-grid .form-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.swap-col {
+  padding-top: 22px;
+}
+
+.btn-swap {
+  background-color: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  color: var(--primary-navy);
+  font-size: 1.3rem;
+  font-weight: 700;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.btn-swap:hover {
+  background-color: var(--btn-blue);
+  color: #ffffff;
+}
+
+.date-and-submit-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.date-col {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.submit-col {
+  flex: 0 0 220px;
+  margin-bottom: 0;
+}
+
+.btn-search-action {
+  width: 100%;
+  padding: 10px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Popular routes */
+.popular-routes-section {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.popular-routes-section h3 {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.popular-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.popular-btn {
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.popular-btn:hover {
+  background-color: var(--btn-blue);
+  border-color: var(--btn-blue);
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .search-card-box {
+    padding: 20px 16px;
+  }
+  .route-selection-grid {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .swap-col {
+    padding-top: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .date-and-submit-row {
+    flex-direction: column;
+  }
+  .submit-col {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+}

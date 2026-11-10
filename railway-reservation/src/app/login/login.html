@@ -1,0 +1,75 @@
+<div class="page-container">
+  <div class="auth-box-container">
+    <div class="card auth-card">
+      <div class="auth-header">
+        <span class="auth-icon">🔐</span>
+        <h1 class="card-title text-center">{{ 'LOGIN_TITLE' | translate }}</h1>
+        <p class="auth-sub text-center">{{ 'LOGIN_SUBTITLE' | translate }}</p>
+      </div>
+
+      @if (infoMessage) {
+        <div class="alert alert-info" role="alert">
+          ℹ️ {{ infoMessage }}
+        </div>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          ⚠️ {{ errorMessage }}
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Email -->
+        <div class="form-group">
+          <label for="login-email">{{ 'LABEL_EMAIL' | translate }} *</label>
+          <input
+            id="login-email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_EMAIL' | translate"
+            [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid">
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.hasError('required')) {
+            <span class="invalid-feedback">Email is required.</span>
+          }
+          @if (loginForm.get('email')?.touched && loginForm.get('email')?.hasError('email')) {
+            <span class="invalid-feedback">Enter a valid email address.</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="login-password">{{ 'LABEL_PASSWORD' | translate }} *</label>
+          <input
+            id="login-password"
+            type="password"
+            formControlName="password"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_PASSWORD' | translate"
+            [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid">
+          @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+            <span class="invalid-feedback">Password is required.</span>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary btn-block">
+          {{ 'BTN_LOGIN' | translate }}
+        </button>
+
+        <!-- Quick Demo Autofill Helper -->
+        <div class="demo-login-helper">
+          <button type="button" class="btn-demo-fill" (click)="fillDemoUser()">
+            ⚡ Fill Demo Credentials (user&#64;railconnect.com)
+          </button>
+        </div>
+      </form>
+
+      <div class="auth-footer-prompt text-center">
+        <span>{{ 'NO_ACCOUNT_PROMPT' | translate }} </span>
+        <a routerLink="/register">{{ 'REGISTER_LINK_TEXT' | translate }}</a>
+      </div>
+    </div>
+  </div>
+</div>

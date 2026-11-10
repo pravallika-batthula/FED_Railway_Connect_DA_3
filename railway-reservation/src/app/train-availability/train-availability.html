@@ -1,0 +1,165 @@
+<div class="page-container">
+  <!-- Search Summary Banner -->
+  <div class="summary-banner card">
+    <div class="summary-route">
+      <span class="route-station">{{ fromStation }}</span>
+      <span class="route-arrow">➔</span>
+      <span class="route-station">{{ toStation }}</span>
+    </div>
+    <div class="summary-meta">
+      <span class="meta-date">📅 {{ journeyDate | localizedDate }}</span>
+      <a routerLink="/search" class="btn btn-secondary btn-sm">
+        ✏️ Modify Search
+      </a>
+    </div>
+  </div>
+
+  <div class="results-controls">
+    <h1 class="results-heading">
+      🚆 {{ 'RESULTS_TITLE' | translate }} ({{ trains.length }})
+    </h1>
+
+    <!-- Class Filter -->
+    <div class="class-filters">
+      <span class="filter-label">Filter View:</span>
+      <button
+        type="button"
+        class="filter-pill"
+        [class.active]="selectedFilterClass === 'ALL'"
+        (click)="filterByClass('ALL')">
+        All Classes
+      </button>
+      <button
+        type="button"
+        class="filter-pill"
+        [class.active]="selectedFilterClass === 'SL'"
+        (click)="filterByClass('SL')">
+        Sleeper (SL)
+      </button>
+      <button
+        type="button"
+        class="filter-pill"
+        [class.active]="selectedFilterClass === '3A'"
+        (click)="filterByClass('3A')">
+        AC 3 Tier (3A)
+      </button>
+      <button
+        type="button"
+        class="filter-pill"
+        [class.active]="selectedFilterClass === '2A'"
+        (click)="filterByClass('2A')">
+        AC 2 Tier (2A)
+      </button>
+    </div>
+  </div>
+
+  @if (trains.length === 0) {
+    <div class="alert alert-info">
+      {{ 'NO_TRAINS_FOUND' | translate }}
+    </div>
+  } @else {
+    <div class="train-cards-list">
+      @for (train of trains; track train.id) {
+        <div class="train-item card">
+          <!-- Top Row: Train Identity and Time -->
+          <div class="train-main-info">
+            <div class="train-title-wrap">
+              <h2 class="train-name-title">{{ train.name }}</h2>
+              <span class="train-num-tag">#{{ train.number }}</span>
+              <span class="train-runs">Runs Daily</span>
+            </div>
+
+            <div class="train-schedule-bar">
+              <div class="sched-point">
+                <span class="sched-time">{{ train.departureTime }}</span>
+                <span class="sched-city">{{ train.from.split('(')[0] }}</span>
+              </div>
+
+              <div class="sched-middle">
+                <span class="sched-duration">{{ train.duration }}</span>
+                <div class="sched-line">
+                  <span class="dot start"></span>
+                  <span class="line"></span>
+                  <span class="dot end"></span>
+                </div>
+              </div>
+
+              <div class="sched-point">
+                <span class="sched-time">{{ train.arrivalTime }}</span>
+                <span class="sched-city">{{ train.to.split('(')[0] }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Class Availability Cards -->
+          <div class="class-cards-grid">
+            <!-- Sleeper -->
+            @if (selectedFilterClass === 'ALL' || selectedFilterClass === 'SL') {
+              <div
+                class="class-ticket-box"
+                [class.active-class]="selectedClassMap[train.id] === 'SL'"
+                (click)="selectClass(train.id, 'SL')">
+                <div class="class-box-header">
+                  <span class="c-code">Sleeper (SL)</span>
+                  <span class="c-fare">{{ train.classes.SL.fare | localizedCurrency }}</span>
+                </div>
+                <div class="c-status">
+                  <span class="badge badge-success">{{ train.classes.SL.status }}</span>
+                </div>
+                <div class="c-update">Updated 2m ago</div>
+              </div>
+            }
+
+            <!-- AC 3 Tier -->
+            @if (selectedFilterClass === 'ALL' || selectedFilterClass === '3A') {
+              <div
+                class="class-ticket-box"
+                [class.active-class]="selectedClassMap[train.id] === '3A'"
+                (click)="selectClass(train.id, '3A')">
+                <div class="class-box-header">
+                  <span class="c-code">AC 3 Tier (3A)</span>
+                  <span class="c-fare">{{ train.classes['3A'].fare | localizedCurrency }}</span>
+                </div>
+                <div class="c-status">
+                  <span class="badge badge-success">{{ train.classes['3A'].status }}</span>
+                </div>
+                <div class="c-update">Updated 5m ago</div>
+              </div>
+            }
+
+            <!-- AC 2 Tier -->
+            @if (selectedFilterClass === 'ALL' || selectedFilterClass === '2A') {
+              <div
+                class="class-ticket-box"
+                [class.active-class]="selectedClassMap[train.id] === '2A'"
+                (click)="selectClass(train.id, '2A')">
+                <div class="class-box-header">
+                  <span class="c-code">AC 2 Tier (2A)</span>
+                  <span class="c-fare">{{ train.classes['2A'].fare | localizedCurrency }}</span>
+                </div>
+                <div class="c-status">
+                  <span class="badge badge-success">{{ train.classes['2A'].status }}</span>
+                </div>
+                <div class="c-update">Updated just now</div>
+              </div>
+            }
+          </div>
+
+          <!-- Bottom Action Row -->
+          <div class="train-footer-row">
+            <div class="booking-selection-note">
+              Selected: <strong>{{ selectedClassMap[train.id] }}</strong> |
+              Fare: <strong>{{ (selectedClassMap[train.id] === 'SL' ? train.classes.SL.fare : (selectedClassMap[train.id] === '3A' ? train.classes['3A'].fare : train.classes['2A'].fare)) | localizedCurrency }}</strong> / passenger
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary btn-book-action"
+              (click)="bookTrain(train)">
+              🎟️ {{ 'BTN_BOOK_NOW' | translate }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

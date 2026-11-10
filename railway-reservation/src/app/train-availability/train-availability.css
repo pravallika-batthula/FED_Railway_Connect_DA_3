@@ -1,0 +1,278 @@
+.summary-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  background-color: #ffffff;
+  padding: 18px 24px;
+  border-left: 5px solid var(--btn-blue);
+}
+
+.summary-route {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary-navy);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.route-arrow {
+  color: var(--btn-blue);
+}
+
+.summary-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.meta-date {
+  font-weight: 600;
+  color: #495057;
+  font-size: 1rem;
+}
+
+.results-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 24px 0 16px 0;
+}
+
+.results-heading {
+  font-size: 1.4rem;
+  margin: 0;
+  color: var(--primary-navy);
+}
+
+.class-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.filter-pill {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.filter-pill:hover {
+  background-color: #f1f5f9;
+}
+
+.filter-pill.active {
+  background-color: var(--primary-navy);
+  color: #ffffff;
+  border-color: var(--primary-navy);
+}
+
+/* Train Item */
+.train-item {
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.train-main-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 16px;
+}
+
+.train-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.train-name-title {
+  font-size: 1.3rem;
+  margin: 0;
+  color: var(--primary-navy);
+}
+
+.train-num-tag {
+  background-color: #e2e8f0;
+  color: #334155;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.train-runs {
+  font-size: 0.8rem;
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* Schedule Bar */
+.train-schedule-bar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.sched-point {
+  display: flex;
+  flex-direction: column;
+}
+
+.sched-time {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.sched-city {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.sched-middle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+}
+
+.sched-duration {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.sched-line {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.sched-line .line {
+  flex: 1;
+  height: 2px;
+  background-color: #cbd5e1;
+}
+
+.sched-line .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--btn-blue);
+}
+
+/* Class Grid */
+.class-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.class-ticket-box {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.class-ticket-box:hover {
+  border-color: var(--btn-blue);
+  background-color: #f0f7ff;
+}
+
+.class-ticket-box.active-class {
+  border-color: var(--btn-blue);
+  background-color: #e8f2ff;
+  box-shadow: 0 2px 6px rgba(0, 86, 179, 0.15);
+}
+
+.class-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.c-code {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--primary-navy);
+}
+
+.c-fare {
+  font-weight: 700;
+  color: #0f5132;
+  font-size: 1.05rem;
+}
+
+.c-status {
+  margin-bottom: 4px;
+}
+
+.c-update {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Footer Row */
+.train-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.booking-selection-note {
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.btn-book-action {
+  font-weight: 600;
+  padding: 8px 24px;
+}
+
+@media (max-width: 768px) {
+  .summary-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .train-main-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .train-schedule-bar {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .sched-middle {
+    width: 80px;
+  }
+}

@@ -1,0 +1,103 @@
+<div class="page-container">
+  <div class="search-page-wrapper">
+    <div class="card search-card-box">
+      <h1 class="card-title">🔍 {{ 'NAV_SEARCH' | translate }}</h1>
+      <p class="subtitle">Search between major railway stations across the Indian Railways network.</p>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          ⚠️ {{ errorMessage }}
+        </div>
+      }
+
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <div class="route-selection-grid">
+          <!-- From Station -->
+          <div class="form-group">
+            <label for="search-from">{{ 'LABEL_FROM_STATION' | translate }} *</label>
+            <select
+              id="search-from"
+              formControlName="from"
+              class="form-control"
+              [class.is-invalid]="searchForm.get('from')?.touched && searchForm.get('from')?.invalid">
+              <option value="" disabled>{{ 'PLACEHOLDER_FROM_STATION' | translate }}</option>
+              @for (st of stations; track st.code) {
+                <option [value]="st.name + ' (' + st.code + ')'">
+                  {{ st.name }} ({{ st.code }}) - {{ st.city }}
+                </option>
+              }
+            </select>
+            @if (searchForm.get('from')?.touched && searchForm.get('from')?.invalid) {
+              <span class="invalid-feedback">Source station is required.</span>
+            }
+          </div>
+
+          <!-- Swap Button -->
+          <div class="swap-col">
+            <button
+              type="button"
+              class="btn-swap"
+              (click)="swapStations()"
+              title="Swap From and To stations">
+              ⇄
+            </button>
+          </div>
+
+          <!-- To Station -->
+          <div class="form-group">
+            <label for="search-to">{{ 'LABEL_TO_STATION' | translate }} *</label>
+            <select
+              id="search-to"
+              formControlName="to"
+              class="form-control"
+              [class.is-invalid]="searchForm.get('to')?.touched && searchForm.get('to')?.invalid">
+              <option value="" disabled>{{ 'PLACEHOLDER_TO_STATION' | translate }}</option>
+              @for (st of stations; track st.code) {
+                <option [value]="st.name + ' (' + st.code + ')'">
+                  {{ st.name }} ({{ st.code }}) - {{ st.city }}
+                </option>
+              }
+            </select>
+            @if (searchForm.get('to')?.touched && searchForm.get('to')?.invalid) {
+              <span class="invalid-feedback">Destination station is required.</span>
+            }
+          </div>
+        </div>
+
+        <div class="date-and-submit-row">
+          <div class="form-group date-col">
+            <label for="search-date">{{ 'LABEL_JOURNEY_DATE' | translate }} *</label>
+            <input
+              id="search-date"
+              type="date"
+              formControlName="date"
+              class="form-control"
+              [min]="todayDateStr"
+              required>
+          </div>
+
+          <div class="form-group submit-col">
+            <button type="submit" class="btn btn-primary btn-search-action">
+              🔍 {{ 'BTN_SEARCH_TRAINS' | translate }}
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Popular Routes -->
+      <div class="popular-routes-section">
+        <h3>Popular Routes</h3>
+        <div class="popular-tags">
+          @for (route of popularRoutes; track route.from + route.to) {
+            <button
+              type="button"
+              class="popular-btn"
+              (click)="setPopularRoute(route.from, route.to)">
+              {{ route.from.split('(')[0] }} ➔ {{ route.to.split('(')[0] }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

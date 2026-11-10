@@ -1,0 +1,123 @@
+<div class="page-container">
+  <div class="auth-box-container">
+    <div class="card auth-card">
+      <div class="auth-header">
+        <span class="auth-icon">📝</span>
+        <h1 class="card-title text-center">{{ 'REGISTER_TITLE' | translate }}</h1>
+        <p class="auth-sub text-center">{{ 'REGISTER_SUBTITLE' | translate }}</p>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">
+          ⚠️ {{ errorMessage }}
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success" role="alert">
+          ✅ {{ successMessage }}
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <!-- Full Name -->
+        <div class="form-group">
+          <label for="reg-name">{{ 'LABEL_NAME' | translate }} *</label>
+          <input
+            id="reg-name"
+            type="text"
+            formControlName="name"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_NAME' | translate"
+            [class.is-invalid]="registerForm.get('name')?.touched && registerForm.get('name')?.invalid">
+          @if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('required')) {
+            <span class="invalid-feedback">Full name is required.</span>
+          }
+          @if (registerForm.get('name')?.touched && registerForm.get('name')?.hasError('minlength')) {
+            <span class="invalid-feedback">Name must be at least 3 characters.</span>
+          }
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="reg-email">{{ 'LABEL_EMAIL' | translate }} *</label>
+          <input
+            id="reg-email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_EMAIL' | translate"
+            [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+          @if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('required')) {
+            <span class="invalid-feedback">Email address is required.</span>
+          }
+          @if (registerForm.get('email')?.touched && registerForm.get('email')?.hasError('email')) {
+            <span class="invalid-feedback">Please enter a valid email format.</span>
+          }
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="form-group">
+          <label for="reg-mobile">{{ 'LABEL_MOBILE' | translate }} *</label>
+          <input
+            id="reg-mobile"
+            type="text"
+            formControlName="mobile"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_MOBILE' | translate"
+            maxlength="10"
+            [class.is-invalid]="registerForm.get('mobile')?.touched && registerForm.get('mobile')?.invalid">
+          @if (registerForm.get('mobile')?.touched && registerForm.get('mobile')?.invalid) {
+            <span class="invalid-feedback">Enter a valid 10-digit Indian mobile number (e.g., 9876543210).</span>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="reg-password">{{ 'LABEL_PASSWORD' | translate }} *</label>
+          <input
+            id="reg-password"
+            type="password"
+            formControlName="password"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_PASSWORD' | translate"
+            [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+          @if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('required')) {
+            <span class="invalid-feedback">Password is required.</span>
+          }
+          @if (registerForm.get('password')?.touched && registerForm.get('password')?.hasError('minlength')) {
+            <span class="invalid-feedback">Password must be at least 6 characters long.</span>
+          }
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="reg-confirm">{{ 'LABEL_CONFIRM_PASSWORD' | translate }} *</label>
+          <input
+            id="reg-confirm"
+            type="password"
+            formControlName="confirmPassword"
+            class="form-control"
+            [placeholder]="'PLACEHOLDER_CONFIRM_PASSWORD' | translate"
+            [class.is-invalid]="(registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid) || (registerForm.touched && registerForm.hasError('mismatch'))">
+          @if (registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.hasError('required')) {
+            <span class="invalid-feedback">Please re-enter your password.</span>
+          }
+          @if (registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched) {
+            <span class="invalid-feedback">{{ 'ERR_PASSWORDS_MISMATCH' | translate }}</span>
+          }
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary btn-block">
+          {{ 'BTN_REGISTER' | translate }}
+        </button>
+      </form>
+
+      <div class="auth-footer-prompt text-center">
+        <span>{{ 'HAVE_ACCOUNT_PROMPT' | translate }} </span>
+        <a routerLink="/login">{{ 'LOGIN_LINK_TEXT' | translate }}</a>
+      </div>
+    </div>
+  </div>
+</div>

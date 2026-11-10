@@ -1,0 +1,271 @@
+<div class="page-container">
+  @if (!bookingConfirmed) {
+    <div class="booking-layout">
+      <!-- Left Column: Passenger Form & Train Info -->
+      <div class="booking-main">
+        <!-- Train Summary Card -->
+        <div class="card train-summary-card">
+          <div class="summary-header">
+            <div>
+              <span class="badge badge-info">{{ travelClass }}</span>
+              <h2 class="train-summary-title">{{ train?.name }} ({{ train?.number }})</h2>
+            </div>
+            <div class="class-picker">
+              <label>Change Class:</label>
+              <div class="class-btn-group">
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-primary]="travelClass === 'SL'"
+                  [class.btn-secondary]="travelClass !== 'SL'"
+                  (click)="changeClass('SL')">
+                  SL
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-primary]="travelClass === '3A'"
+                  [class.btn-secondary]="travelClass !== '3A'"
+                  (click)="changeClass('3A')">
+                  3A
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm"
+                  [class.btn-primary]="travelClass === '2A'"
+                  [class.btn-secondary]="travelClass !== '2A'"
+                  (click)="changeClass('2A')">
+                  2A
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="route-details-grid">
+            <div class="route-detail-item">
+              <span class="detail-label">{{ 'LABEL_FROM_STATION' | translate }}</span>
+              <span class="detail-value">{{ fromStation }}</span>
+              <span class="detail-sub">{{ train?.departureTime }}</span>
+            </div>
+            <div class="route-detail-arrow">➔</div>
+            <div class="route-detail-item">
+              <span class="detail-label">{{ 'LABEL_TO_STATION' | translate }}</span>
+              <span class="detail-value">{{ toStation }}</span>
+              <span class="detail-sub">{{ train?.arrivalTime }}</span>
+            </div>
+            <div class="route-detail-item">
+              <span class="detail-label">{{ 'LABEL_JOURNEY_DATE' | translate }}</span>
+              <span class="detail-value">{{ journeyDate | localizedDate }}</span>
+              <span class="detail-sub">Duration: {{ train?.duration }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Passenger Details Form -->
+        <div class="card passenger-card">
+          <div class="card-header-flex">
+            <h2 class="card-title">{{ 'PASSENGER_DETAILS_HEADER' | translate }}</h2>
+            <button
+              type="button"
+              class="btn btn-secondary btn-sm"
+              [disabled]="passengersArray.length >= 6"
+              (click)="addPassenger()">
+              {{ 'BTN_ADD_PASSENGER' | translate }}
+            </button>
+          </div>
+
+          @if (errorMessage) {
+            <div class="alert alert-danger">
+              ⚠️ {{ errorMessage }}
+            </div>
+          }
+
+          <form [formGroup]="bookingForm" (ngSubmit)="onSubmitBooking()">
+            <div formArrayName="passengers">
+              @for (passengerGroup of passengersArray.controls; track $index) {
+                <div [formGroupName]="$index" class="passenger-row-card">
+                  <div class="passenger-number-badge">
+                    Passenger #{{ $index + 1 }}
+                  </div>
+
+                  <div class="passenger-inputs-grid">
+                    <!-- Passenger Name -->
+                    <div class="form-group name-field">
+                      <label>{{ 'LABEL_PASSENGER_NAME' | translate }} *</label>
+                      <input
+                        type="text"
+                        formControlName="name"
+                        class="form-control"
+                        placeholder="Enter full name"
+                        [class.is-invalid]="passengerGroup.get('name')?.touched && passengerGroup.get('name')?.invalid">
+                      @if (passengerGroup.get('name')?.touched && passengerGroup.get('name')?.invalid) {
+                        <span class="invalid-feedback">Name is required (min 2 characters).</span>
+                      }
+                    </div>
+
+                    <!-- Passenger Age -->
+                    <div class="form-group age-field">
+                      <label>{{ 'LABEL_PASSENGER_AGE' | translate }} *</label>
+                      <input
+                        type="number"
+                        formControlName="age"
+                        class="form-control"
+                        placeholder="Age"
+                        min="1"
+                        max="120"
+                        [class.is-invalid]="passengerGroup.get('age')?.touched && passengerGroup.get('age')?.invalid">
+                      @if (passengerGroup.get('age')?.touched && passengerGroup.get('age')?.invalid) {
+                        <span class="invalid-feedback">Valid age (1-120) required.</span>
+                      }
+                    </div>
+
+                    <!-- Passenger Gender -->
+                    <div class="form-group gender-field">
+                      <label>{{ 'LABEL_PASSENGER_GENDER' | translate }} *</label>
+                      <select formControlName="gender" class="form-control">
+                        <option value="Male">{{ 'GENDER_MALE' | translate }}</option>
+                        <option value="Female">{{ 'GENDER_FEMALE' | translate }}</option>
+                        <option value="Transgender">{{ 'GENDER_OTHER' | translate }}</option>
+                      </select>
+                    </div>
+
+                    <!-- Remove Button -->
+                    @if (passengersArray.length > 1) {
+                      <div class="remove-btn-col">
+                        <button
+                          type="button"
+                          class="btn btn-danger btn-sm"
+                          (click)="removePassenger($index)"
+                          title="Remove Passenger">
+                          ✕ {{ 'BTN_REMOVE' | translate }}
+                        </button>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Submit button for mobile view -->
+            <div class="mobile-submit-wrap">
+              <button type="submit" class="btn btn-primary btn-full-width">
+                💳 {{ 'BTN_CONFIRM_BOOKING' | translate }} ({{ totalFare | localizedCurrency }})
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Column: Fare Summary Card -->
+      <div class="booking-sidebar">
+        <div class="card fare-summary-card">
+          <h3 class="card-title">{{ 'FARE_SUMMARY_HEADER' | translate }}</h3>
+
+          <div class="fare-line">
+            <span>{{ 'BASE_FARE_PER_PASSENGER' | translate }} ({{ travelClass }}):</span>
+            <span class="fare-num">{{ farePerPassenger | localizedCurrency }}</span>
+          </div>
+
+          <div class="fare-line">
+            <span>{{ 'TOTAL_PASSENGERS' | translate }}:</span>
+            <span class="fare-num">× {{ passengersArray.length }}</span>
+          </div>
+
+          <hr class="fare-divider">
+
+          <div class="fare-line total-line">
+            <span>{{ 'TOTAL_FARE' | translate }}:</span>
+            <span class="total-amount">{{ totalFare | localizedCurrency }}</span>
+          </div>
+
+          <div class="fare-taxes-note">
+            Inclusive of all railway reservation charges & taxes.
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-full-width btn-book-submit"
+            (click)="onSubmitBooking()">
+            💳 {{ 'BTN_CONFIRM_BOOKING' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <!-- Booking Confirmation Display -->
+    <div class="confirmation-container card">
+      <div class="confirmation-hero">
+        <div class="check-circle">✓</div>
+        <h1 class="conf-title">{{ 'CONFIRMATION_TITLE' | translate }}</h1>
+        <p class="conf-subtitle">{{ 'CONFIRMATION_SUBTITLE' | translate }}</p>
+      </div>
+
+      <!-- PNR Badge Highlight -->
+      <div class="pnr-highlight-box">
+        <span class="pnr-tag-label">{{ 'LABEL_PNR' | translate }}</span>
+        <span class="pnr-tag-number">{{ confirmedBooking?.pnr }}</span>
+        <span class="badge badge-success">{{ confirmedBooking?.status }}</span>
+      </div>
+
+      <div class="ticket-details-box">
+        <div class="ticket-header-row">
+          <div>
+            <h3>{{ confirmedBooking?.trainName }} ({{ confirmedBooking?.trainNumber }})</h3>
+            <p class="route-p">
+              {{ confirmedBooking?.fromStation }} ➔ {{ confirmedBooking?.toStation }}
+            </p>
+          </div>
+          <div class="class-stamp">
+            <span class="stamp-class">{{ confirmedBooking?.travelClass }}</span>
+            <span class="stamp-date">{{ confirmedBooking?.journeyDate | localizedDate }}</span>
+          </div>
+        </div>
+
+        <!-- Passengers & Assigned Berth Table -->
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{ 'LABEL_PASSENGER_NAME' | translate }}</th>
+                <th>{{ 'LABEL_PASSENGER_AGE' | translate }}</th>
+                <th>{{ 'LABEL_PASSENGER_GENDER' | translate }}</th>
+                <th>Allocated Coach & Seat</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of confirmedBooking?.passengers; track $index) {
+                <tr>
+                  <td>{{ $index + 1 }}</td>
+                  <td><strong>{{ p.name }}</strong></td>
+                  <td>{{ p.age }} yrs</td>
+                  <td>{{ p.gender }}</td>
+                  <td><span class="seat-badge">{{ p.seatNumber }}</span></td>
+                  <td><span class="badge badge-success">CNF (Confirmed)</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="ticket-fare-row">
+          <span>Booked on: {{ confirmedBooking?.bookingDate | localizedDate }}</span>
+          <span class="paid-fare">Total Paid: <strong>{{ confirmedBooking?.totalFare | localizedCurrency }}</strong></span>
+        </div>
+      </div>
+
+      <div class="confirmation-actions">
+        <button type="button" class="btn btn-secondary" (click)="printTicket()">
+          🖨️ {{ 'BTN_PRINT_TICKET' | translate }}
+        </button>
+        <a routerLink="/bookings" class="btn btn-primary">
+          📂 {{ 'BTN_GO_TO_BOOKINGS' | translate }}
+        </a>
+        <a routerLink="/search" class="btn btn-secondary">
+          🔍 {{ 'BTN_BOOK_ANOTHER' | translate }}
+        </a>
+      </div>
+    </div>
+  }
+</div>

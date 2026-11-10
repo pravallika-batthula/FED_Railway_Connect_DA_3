@@ -1,0 +1,189 @@
+<div class="page-container">
+  <div class="bookings-page-header">
+    <div>
+      <h1 class="page-title">📂 {{ 'MY_BOOKINGS_TITLE' | translate }}</h1>
+      <p class="page-sub">{{ 'MY_BOOKINGS_SUBTITLE' | translate }}</p>
+    </div>
+    <a routerLink="/search" class="btn btn-primary">
+      ➕ {{ 'BTN_START_SEARCH' | translate }}
+    </a>
+  </div>
+
+  @if (notificationMessage) {
+    <div class="alert alert-success" role="alert">
+      ✅ {{ notificationMessage }}
+    </div>
+  }
+
+  @if (userBookings.length === 0) {
+    <div class="card empty-bookings-card text-center">
+      <div class="empty-icon">🎟️</div>
+      <h2>{{ 'NO_BOOKINGS_MSG' | translate }}</h2>
+      <p>Search trains and book your tickets easily on RailConnect.</p>
+      <a routerLink="/search" class="btn btn-primary">
+        {{ 'BTN_START_SEARCH' | translate }}
+      </a>
+    </div>
+  } @else {
+    <div class="bookings-list">
+      @for (booking of userBookings; track booking.pnr) {
+        <div class="card booking-item-card" [class.cancelled-card]="booking.status === 'CANCELLED'">
+          <div class="booking-top-bar">
+            <div class="pnr-badge-wrap">
+              <span class="pnr-title-label">PNR:</span>
+              <span class="pnr-code">{{ booking.pnr }}</span>
+            </div>
+
+            <div class="status-and-class">
+              <span class="class-tag">{{ booking.travelClass }}</span>
+              <span
+                class="badge"
+                [class.badge-success]="booking.status === 'CONFIRMED'"
+                [class.badge-danger]="booking.status === 'CANCELLED'">
+                {{ booking.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="booking-train-body">
+            <div class="train-details-col">
+              <h3 class="b-train-name">{{ booking.trainName }} ({{ booking.trainNumber }})</h3>
+              <div class="b-route">
+                <span>{{ booking.fromStation }}</span>
+                <span class="route-arrow">➔</span>
+                <span>{{ booking.toStation }}</span>
+              </div>
+            </div>
+
+            <div class="b-meta-col">
+              <div class="b-meta-item">
+                <span class="meta-label">{{ 'JOURNEY_DATE_LABEL' | translate }}:</span>
+                <span class="meta-val">{{ booking.journeyDate | localizedDate }}</span>
+              </div>
+              <div class="b-meta-item">
+                <span class="meta-label">Passengers:</span>
+                <span class="meta-val">{{ booking.passengers.length }}</span>
+              </div>
+              <div class="b-meta-item">
+                <span class="meta-label">{{ 'TOTAL_FARE' | translate }}:</span>
+                <span class="meta-val fare-green">{{ booking.totalFare | localizedCurrency }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Actions -->
+          <div class="booking-card-actions">
+            <span class="booked-on-text">Booked on: {{ booking.bookingDate | localizedDate }}</span>
+            <div class="action-btn-group">
+              <button
+                type="button"
+                class="btn btn-secondary btn-sm"
+                (click)="openDetails(booking)">
+                📄 {{ 'BTN_VIEW_DETAILS' | translate }}
+              </button>
+
+              @if (booking.status === 'CONFIRMED') {
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="cancelBooking(booking)">
+                  ✕ {{ 'BTN_CANCEL_TICKET' | translate }}
+                </button>
+              } @else {
+                <span class="cancelled-tag">Cancelled</span>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal for Ticket Details -->
+  @if (selectedBookingForDetails) {
+    <div class="modal-backdrop" (click)="closeDetails()">
+      <div class="modal-card card" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2 class="modal-title">🎫 {{ 'MODAL_TICKET_DETAILS' | translate }}</h2>
+          <button type="button" class="close-btn" (click)="closeDetails()">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="pnr-highlight-box modal-pnr">
+            <span class="pnr-tag-label">PNR:</span>
+            <span class="pnr-tag-number">{{ selectedBookingForDetails.pnr }}</span>
+            <span
+              class="badge"
+              [class.badge-success]="selectedBookingForDetails.status === 'CONFIRMED'"
+              [class.badge-danger]="selectedBookingForDetails.status === 'CANCELLED'">
+              {{ selectedBookingForDetails.status }}
+            </span>
+          </div>
+
+          <div class="modal-route-summary">
+            <h3>{{ selectedBookingForDetails.trainName }} (#{{ selectedBookingForDetails.trainNumber }})</h3>
+            <p><strong>{{ selectedBookingForDetails.fromStation }}</strong> ➔ <strong>{{ selectedBookingForDetails.toStation }}</strong></p>
+            <p>Date: <strong>{{ selectedBookingForDetails.journeyDate | localizedDate }}</strong> | Class: <strong>{{ selectedBookingForDetails.travelClass }}</strong></p>
+          </div>
+
+          <!-- Passenger Table -->
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>{{ 'LABEL_PASSENGER_NAME' | translate }}</th>
+                  <th>Age</th>
+                  <th>Gender</th>
+                  <th>Coach & Seat</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (p of selectedBookingForDetails.passengers; track $index) {
+                  <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td><strong>{{ p.name }}</strong></td>
+                    <td>{{ p.age }} yrs</td>
+                    <td>{{ p.gender }}</td>
+                    <td><span class="seat-badge">{{ p.seatNumber }}</span></td>
+                    <td>
+                      <span
+                        class="badge"
+                        [class.badge-success]="selectedBookingForDetails.status === 'CONFIRMED'"
+                        [class.badge-danger]="selectedBookingForDetails.status === 'CANCELLED'">
+                        {{ selectedBookingForDetails.status === 'CONFIRMED' ? 'CNF' : 'CAN' }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="modal-fare-row">
+            <span>Booked on: {{ selectedBookingForDetails.bookingDate | localizedDate }}</span>
+            <span class="total-paid">Total: <strong>{{ selectedBookingForDetails.totalFare | localizedCurrency }}</strong></span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="printTicket()">
+            🖨️ Print Ticket
+          </button>
+          @if (selectedBookingForDetails.status === 'CONFIRMED') {
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="cancelBooking(selectedBookingForDetails)">
+              ✕ Cancel This Ticket
+            </button>
+          }
+          <button type="button" class="btn btn-primary" (click)="closeDetails()">
+            {{ 'BTN_CLOSE' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
